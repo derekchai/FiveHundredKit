@@ -23,6 +23,8 @@ struct FiveHundredState: GameStateRepresentable {
     
     private var bids: [(player: Player, bid: Bid)] = []
     
+    private var acceptingBids: Bool = true
+    
     init(players: [Player]) {
         self.players = players
         self.playerToPlay = players[0]
@@ -37,24 +39,27 @@ struct FiveHundredState: GameStateRepresentable {
     }
     
     mutating func bid(_ bid: Bid) throws {
-        if self.bid != nil {
+        guard acceptingBids else {
             throw GameError.biddingClosed
         }
         
-        guard bids.isEmpty
-                || bid == .pass
-                || bid > bids.last(where: { $0.bid != .pass })!.bid else {
-            throw GameError.invalidBid
+        if let lastValuedBid = bids.last(where: { $0.bid != .pass }),
+           bid != .pass {
+            guard bid > lastValuedBid.bid else {
+                throw GameError.invalidBid
+            }
         }
         
         bids.append((playerToPlay, bid))
         playerToPlay = nextPlayer
         
-        guard bids.count == 4 else { return }
+        guard bids.count == players.count else { return }
         
-        if bids.count(where: { $0.bid == .pass }) == 3 {
-            self.bid = bids.last { $0.bid != .pass }
+        self.bid = bids.last { $0.bid != .pass }
+        
+        if bids.count(where: { $0.bid == .pass }) == players.count {
             playerToPlay = players[0]
+            acceptingBids = false
         } else {
             bids.removeAll()
         }
