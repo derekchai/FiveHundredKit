@@ -161,7 +161,7 @@ class FiveHundredStateTests {
             try state.setHand(of: east, to: [.standard(.king, .spades),
                                              .standard(.queen, .hearts)])
             try state.setHand(of: south, to: [.standard(.five, .diamonds)])
-            try state.setHand(of: west, to: [.standard(.ten, .spades)])
+            try state.setHand(of: west, to: [.joker, .standard(.five, .hearts)])
             
             try state.bid(.standard(6, .spades))
             try state.bid(.pass)
@@ -171,7 +171,7 @@ class FiveHundredStateTests {
             try state.bid(.pass)
             try state.bid(.pass)
             try state.bid(.pass)
-            try state.bid(.pass) // Conclude bidding.
+            try state.bid(.pass) // Conclude bidding; bid is 6 spades.
             
             // N leads.
             
@@ -188,6 +188,15 @@ class FiveHundredStateTests {
             
             try state.play(.standard(.five, .diamonds))     // S has no spades
                                                             // and can discard.
+        }
+        
+        #expect(throws: FiveHundredState.RuleError.mustFollowSuit.self) {
+            // W tries to play 5h but can follow suit with joker.
+            try state.play(.standard(.five, .hearts))
+        }
+        
+        #expect(throws: Never.self) {
+            try state.play(.joker)                          // W plays joker.
         }
     }
 }
