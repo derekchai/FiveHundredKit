@@ -22,37 +22,41 @@ class FiveHundredStateTests {
     }
     
     @Test func testPlayerOrder() async throws {
-        do {
+        #expect(throws: Never.self) {
             try state.bid(.misere)
             try state.bid(.pass)
             try state.bid(.pass)
             try state.bid(.pass)
-        } catch let e {
-            fatalError(e.localizedDescription)
         }
         
         #expect(state.playerToPlay === north)
         #expect(state.nextPlayer === east)
 
-        state.play(.joker)
+        try state.play(.joker)
         
         #expect(state.playerToPlay === east)
         #expect(state.nextPlayer === south)
 
-        state.play(.joker)
+        try state.play(.joker)
 
         #expect(state.playerToPlay === south)
         #expect(state.nextPlayer === west)
         
-        state.play(.joker)
+        try state.play(.joker)
         
         #expect(state.playerToPlay === west)
         #expect(state.nextPlayer === north)
 
-        state.play(.joker)
+        try state.play(.joker)
         
         #expect(state.playerToPlay === north)
         #expect(state.nextPlayer === east)
+    }
+    
+    @Test func testPlayWithoutBid() async throws {
+        #expect(throws: FiveHundredState.GameError.noBidMade) {
+            try state.play(.joker)
+        }
     }
     
     @Test func testBidding() async throws {

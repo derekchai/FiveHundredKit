@@ -30,9 +30,9 @@ struct FiveHundredState: GameStateRepresentable {
         self.playerToPlay = players[0]
     }
     
-    mutating func play(_: PlayingCard) {
+    mutating func play(_: PlayingCard) throws {
         guard bid != nil else {
-            fatalError("Bid should not be nil.")
+            throw GameError.noBidMade
         }
         
         playerToPlay = nextPlayer

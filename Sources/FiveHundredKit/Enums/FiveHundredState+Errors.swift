@@ -21,4 +21,15 @@ extension FiveHundredState {
             }
         }
     }
+    
+    enum GameError: Error, LocalizedError {
+        case noBidMade
+        
+        public var errorDescription: String? {
+            switch self {
+            case .noBidMade:
+                "No bid has been made"
+            }
+        }
+    }
 }
