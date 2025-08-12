@@ -6,6 +6,7 @@
 //
 
 enum Bid {
+    case pass
     case misere
     case openMisere
     case standard(Int, Suit)
