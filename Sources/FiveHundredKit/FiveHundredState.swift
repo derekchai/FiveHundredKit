@@ -37,6 +37,10 @@ struct FiveHundredState: GameStateRepresentable {
     }
     
     mutating func bid(_ bid: Bid) throws {
+        if self.bid != nil {
+            throw GameError.biddingClosed
+        }
+        
         guard bids.isEmpty
                 || bid == .pass
                 || bid > bids.last(where: { $0.bid != .pass })!.bid else {

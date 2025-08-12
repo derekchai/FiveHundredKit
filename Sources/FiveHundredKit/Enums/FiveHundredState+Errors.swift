@@ -8,5 +8,6 @@
 extension FiveHundredState {
     enum GameError: Error {
         case invalidBid
+        case biddingClosed
     }
 }
