@@ -154,10 +154,8 @@ struct FiveHundredState: GameStateRepresentable {
         
         guard bids.count == players.count else { return }
         
-//        self.bid = bids.last { $0.bid != .pass }
-        
         if bids.count(where: { $0.bid == .pass }) == players.count {
-            playerToPlay = players[0]
+            playerToPlay = self.bid!.player
             acceptingBids = false
         } else {
             bids.removeAll()
