@@ -110,7 +110,12 @@ struct FiveHundredState: GameStateRepresentable {
                 case .trump(let trumpSuit):
                     return leadSuit == trumpSuit
                 }
-            case .standard(_, let suit):
+            case .standard(let rank, let suit):
+                if case .trump = trumps,
+                   case .jack = rank {
+                    return suit.sameColorSuits.contains(leadSuit)
+                }
+                
                 return leadSuit == suit
             }
         }) {
@@ -124,7 +129,15 @@ struct FiveHundredState: GameStateRepresentable {
                         throw RuleError.mustFollowSuit
                     }
                 }
-            case .standard(_, let suit):
+            case .standard(let rank, let suit):
+                if case .trump = trumps,
+                   case .jack = rank {
+                    guard suit.sameColorSuits.contains(leadSuit) else {
+                        throw RuleError.mustFollowSuit
+                    }
+                    return
+                }
+                
                 guard leadSuit == suit else {
                     throw RuleError.mustFollowSuit
                 }

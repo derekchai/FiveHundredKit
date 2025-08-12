@@ -109,7 +109,7 @@ class FiveHundredStatePlayTests {
         }
     }
     
-    @Test("Bowers count as trump suit")
+    @Test("Bowers count as trump suit in trumped game")
     func varTestBowersCountAsTrumpSuit() async throws {
         try state.setHand(of: north, to: [.standard(.ace, .spades)])
         try state.setHand(of: east, to: [.standard(.jack, .clubs),
@@ -137,6 +137,28 @@ class FiveHundredStatePlayTests {
         }
     }
     
+    @Test("Bowers do not count as trump suit in no trumps game")
+    func varTestBowersDoNotCountAsTrumpSuitInNoTrumps() async throws {
+        try state.setHand(of: north, to: [.standard(.ace, .spades)])
+        try state.setHand(of: east, to: [.standard(.jack, .clubs),
+                                         .standard(.queen, .hearts)])
+        
+        try state.bid(.noTrumps(6))
+        try state.bid(.pass)
+        try state.bid(.pass)
+        try state.bid(.pass)
+        
+        try state.bid(.pass)
+        try state.bid(.pass)
+        try state.bid(.pass)
+        try state.bid(.pass) // Conclude bidding; bid is 6 NT.
+        
+        try state.play(.standard(.ace, .spades))            // N plays As
+        
+        #expect(throws: Never.self) {
+            try state.play(.standard(.queen, .hearts))      // E plays Qh
+        }
+    }
     
     @Test("Gameplay 1")
     func testGameplay1() async throws {
