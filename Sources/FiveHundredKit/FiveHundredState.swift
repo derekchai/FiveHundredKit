@@ -30,10 +30,13 @@ struct FiveHundredState: GameStateRepresentable {
     
     private var discards: [PlayingCard] = []
     
+    private var hands: [Player: [PlayingCard]]
+    
     // MARK: - Initializer
     init(players: [Player]) {
         self.players = players
         self.playerToPlay = players[0]
+        self.hands = Dictionary(uniqueKeysWithValues: players.map { ($0, []) })
     }
     
     // MARK: - Functions
