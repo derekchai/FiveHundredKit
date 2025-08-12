@@ -7,7 +7,10 @@
 
 enum Bid {
     case pass
+    
     case misere
     case openMisere
+    
+    case noTrumps(Int)
     case standard(Int, Suit)
 }
