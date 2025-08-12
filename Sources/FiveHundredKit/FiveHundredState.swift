@@ -88,5 +88,7 @@ struct FiveHundredState: GameStateRepresentable {
             hands[players[i]]?.append(deck.removeFirst())
             i = (i + 1) % players.count
         }
+        
+#warning("todo: sort players' hands")
     }
 }
