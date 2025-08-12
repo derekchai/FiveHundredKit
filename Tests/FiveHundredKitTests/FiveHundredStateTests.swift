@@ -112,6 +112,10 @@ class FiveHundredStateTests {
         state.players.forEach { player in
             #expect(self.state.hands[player]?.count == 10)
         }
+        
+        for player in state.players {
+            print(state.hands[player]?.description)
+        }
     }
 }
 

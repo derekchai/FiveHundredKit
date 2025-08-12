@@ -33,3 +33,14 @@ enum PlayingCard: MoveRepresentable {
             Suit.allCases.map { suit in .standard(rank, suit)}}
     }
 }
+
+extension PlayingCard: CustomStringConvertible {
+    var description: String {
+        switch self {
+        case .joker:
+            return "Joker"
+        case .standard(let rank, let suit):
+            return rank.description + suit.description
+        }
+    }
+}
