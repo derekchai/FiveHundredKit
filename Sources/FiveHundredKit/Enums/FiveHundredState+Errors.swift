@@ -24,11 +24,28 @@ extension FiveHundredState {
     
     enum GameError: Error, LocalizedError {
         case noBidMade
+        case playerNotFound
         
         public var errorDescription: String? {
             switch self {
             case .noBidMade:
                 "No bid has been made"
+            case .playerNotFound:
+                "Player was not found"
+            }
+        }
+    }
+    
+    enum RuleError: Error, LocalizedError {
+        case playerDoesNotHoldCard
+        case mustFollowSuit
+        
+        public var errorDescription: String? {
+            switch self {
+            case .playerDoesNotHoldCard:
+                "The player does not hold the specified card"
+            case .mustFollowSuit:
+                "Played card must follow suit"
             }
         }
     }
