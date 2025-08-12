@@ -214,6 +214,19 @@ class FiveHundredStateTests {
         
         #expect(state.hands[north] == kitty)
     }
+    
+    @Test("Discard after kitty added to bid-winner's hand")
+    func testDiscardAfterKittyAddedToBidWinnerHand() async throws {
+        try await testKittyAddedToBidWinnerHand()
+        
+        // N wins bid (6 spades) and gets kitty (Joker, Jh, Jd)
+        
+        state.discardFromBidWinner(cards: [.joker,
+                                           .standard(.jack, .hearts),
+                                           .standard(.jack, .diamonds)])
+        
+        #expect(state.hands[north] == [])
+    }
 }
 
 

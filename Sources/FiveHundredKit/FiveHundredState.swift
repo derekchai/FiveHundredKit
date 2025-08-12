@@ -156,5 +156,14 @@ struct FiveHundredState: GameStateRepresentable {
         
         playerToPlay = nextPlayer
     }
-
+    
+    /// Discards `cards` from the hand of the winner of the bid.
+    /// - Parameter cards: The cards to discard.
+    mutating func discardFromBidWinner(cards: [PlayingCard]) {
+        guard let winner = bid?.player else {
+            fatalError("Bid must not be nil")
+        }
+        
+        hands[winner]?.removeAll { cards.contains($0) }
+    }
 }
