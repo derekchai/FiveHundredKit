@@ -176,14 +176,14 @@ class FiveHundredStateTests {
         
         #expect(throws: FiveHundredState.RuleError.mustFollowSuit.self) {
             try state.play(.standard(.queen, .hearts))      // E plays Qh but
-                                                            // can follow suit.
+            // can follow suit.
         }
         
         #expect(throws: Never.self) {
             try state.play(.standard(.king, .spades))       // E plays Ks.
             
             try state.play(.standard(.five, .diamonds))     // S has no spades
-                                                            // and can discard.
+            // and can discard.
         }
         
         #expect(throws: FiveHundredState.RuleError.mustFollowSuit.self) {
@@ -194,6 +194,26 @@ class FiveHundredStateTests {
         #expect(throws: Never.self) {
             try state.play(.joker)                          // W plays joker.
         }
+    }
+    
+    @Test("Redeal when all plays pass without bids made")
+    func testRedeal() async throws {
+        state.deal()
+        
+        let northHand = state.hands[north]
+        let eastHand = state.hands[east]
+        
+        #expect(throws: Never.self) {
+            try state.bid(.pass)        // N
+            try state.bid(.pass)        // E
+            try state.bid(.pass)        // S
+            try state.bid(.pass)        // W
+            
+            // Cards re-dealt.
+        }
+        
+        #expect( state.hands[north] != northHand
+                 || state.hands[east] != eastHand )
     }
 }
 
