@@ -25,6 +25,8 @@ struct FiveHundredState: GameStateRepresentable {
         players[(playerToPlayIndex + 1) % players.count]
     }
     
+    private(set) var bid: Bid?
+    
     private var playerToPlayIndex: Int = 0
     
     init(players: [Player]) {
