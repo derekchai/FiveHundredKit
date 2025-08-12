@@ -7,12 +7,6 @@
 
 struct FiveHundredState: GameStateRepresentable {
     // MARK: - Properties
-    var moves: [PlayingCard] {
-        if trick.isEmpty { return hands[playerToPlay] ?? [] }
-        
-        return []
-    }
-    
     var players: [Player] = []
     
     var playerToPlay: Player
@@ -40,6 +34,21 @@ struct FiveHundredState: GameStateRepresentable {
     private var trick: [(player: Player, card: PlayingCard)] = []
     
     // MARK: Computed Properties
+    /// Returns all legal moves (i.e. cards able to be played) for the player
+    /// to play.
+    var moves: [PlayingCard] {
+        var moves = [PlayingCard]()
+        
+        for card in hands[playerToPlay]! {
+            do {
+                try validatePlay(of: card)
+                moves.append(card)
+            } catch {}
+        }
+        
+        return moves
+    }
+    
     /// The trump suit (or no trumps) for this round.
     private var trumps: Trump? {
         guard let bid else { return nil }
