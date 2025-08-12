@@ -26,7 +26,20 @@ struct BidTests {
         #expect(Bid.standard(7, .clubs).points == 160)
         #expect(Bid.standard(7, .diamonds).points == 180)
         #expect(Bid.standard(7, .hearts).points == 200)
-        #expect(Bid.noTrumps(7).points == 120)
+        #expect(Bid.noTrumps(7).points == 220)
+    }
+    
+    @Test func testBidComparability() async throws {
+        #expect(Bid.pass < Bid.standard(6, .spades))
+        
+        #expect(Bid.standard(6, .spades) < Bid.standard(6, .clubs))
+        
+        #expect(Bid.misere > Bid.standard(8, .spades))
+        #expect(Bid.misere < Bid.standard(8, .clubs))
+        
+        #expect(Bid.standard(10, .hearts) == Bid.openMisere)
+        
+        #expect(Bid.noTrumps(10) > Bid.openMisere)
     }
 
 }
