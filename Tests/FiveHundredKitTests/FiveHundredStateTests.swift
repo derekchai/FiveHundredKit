@@ -9,46 +9,65 @@ import Testing
 @testable import FiveHundredKit
 
 class FiveHundredStateTests {
-    let north, east, south, west: Player
+    let north = Player(name: "North")
+    let east = Player(name: "East")
+    let south = Player(name: "South")
+    let west = Player(name: "West")
+    
     var state: FiveHundredState
     
     init() {
-        north = Player(name: "North")
-        east = Player(name: "East")
-        south = Player(name: "South")
-        west = Player(name: "West")
-        
         state = FiveHundredState(players: [north, east, south, west])
     }
     
     @Test("Player order is as expected")
     func testPlayerOrder() async throws {
         #expect(throws: Never.self) {
-            try state.bid(.misere)
+            try state.setHand(of: north, to: [.standard(.ace, .spades)])
+            try state.setHand(of: east, to: [.standard(.king, .spades)])
+            try state.setHand(of: south, to: [.standard(.queen, .spades)])
+            try state.setHand(of: west, to: [.standard(.ten, .spades)])
+            
+            try state.bid(.standard(6, .spades))
             try state.bid(.pass)
             try state.bid(.pass)
             try state.bid(.pass)
+            
+            try state.bid(.pass)
+            try state.bid(.pass)
+            try state.bid(.pass)
+            try state.bid(.pass) // Conclude bidding (N wins).
+            
+            // N leads.
         }
         
         #expect(state.playerToPlay === north)
         #expect(state.nextPlayer === east)
-
-        try state.play(.joker)
+        
+        #expect(throws: Never.self) {
+            try state.play(.standard(.ace, .spades))            // N: As
+        }
         
         #expect(state.playerToPlay === east)
         #expect(state.nextPlayer === south)
-
-        try state.play(.joker)
-
+        
+        #expect(throws: Never.self) {
+            try state.play(.standard(.king, .spades))           // E: Ks
+        }
+        
         #expect(state.playerToPlay === south)
         #expect(state.nextPlayer === west)
         
-        try state.play(.joker)
+        #expect(throws: Never.self) {
+            try state.play(.standard(.queen, .spades))          // S: Qs
+        }
         
         #expect(state.playerToPlay === west)
         #expect(state.nextPlayer === north)
-
-        try state.play(.joker)
+        
+        #expect(throws: Never.self) {
+            try state.play(.standard(.ten, .spades))            // W: Ts
+        }
         
         #expect(state.playerToPlay === north)
         #expect(state.nextPlayer === east)
@@ -64,20 +83,20 @@ class FiveHundredStateTests {
     @Test("Bidding works as expected")
     func testBidding() async throws {
         #expect(throws: Never.self) {
-            try state.bid(.pass) // N
-            try state.bid(.standard(6, .spades)) // E
-            try state.bid(.pass) // S
-            try state.bid(.pass) // W
+            try state.bid(.pass)                    // N
+            try state.bid(.standard(6, .spades))    // E
+            try state.bid(.pass)                    // S
+            try state.bid(.pass)                    // W
             
-            try state.bid(.pass) // N: passing on bid re-entry
-            try state.bid(.standard(6, .clubs)) // E: overbid self
-            try state.bid(.pass) // S: passing on bid re-entry
-            try state.bid(.standard(7, .clubs)) // W: overbid team
+            try state.bid(.pass)                // N: passing on bid re-entry
+            try state.bid(.standard(6, .clubs))     // E: overbid self
+            try state.bid(.pass)                // S: passing on bid re-entry
+            try state.bid(.standard(7, .clubs))     // W: overbid team
             
-            try state.bid(.pass) // N
-            try state.bid(.pass) // E
-            try state.bid(.pass) // S
-            try state.bid(.pass) // W
+            try state.bid(.pass)                    // N
+            try state.bid(.pass)                    // E
+            try state.bid(.pass)                    // S
+            try state.bid(.pass)                    // W
         }
         
         // Bidding should have concluded (after all players pass in a bidding
@@ -115,6 +134,60 @@ class FiveHundredStateTests {
         
         for player in state.players {
             print(state.hands[player]?.description)
+        }
+    }
+    
+    @Test("Bid winner leads first trick")
+    func testBidWinnerLeadsFirstTrick() async throws {
+        #expect(throws: Never.self) {
+            try state.bid(.pass)                    // N
+            try state.bid(.pass)                    // E
+            try state.bid(.pass)                    // S
+            try state.bid(.standard(6, .spades))    // W
+            
+            try state.bid(.pass)
+            try state.bid(.pass)
+            try state.bid(.pass)
+            try state.bid(.pass) // Conclude bidding
+        }
+        
+        #expect(state.playerToPlay === west)
+    }
+    
+    @Test("Must follow suit")
+    func testMustFollowSuit() async throws {
+        #expect(throws: Never.self) {
+            try state.setHand(of: north, to: [.standard(.ace, .spades)])
+            try state.setHand(of: east, to: [.standard(.king, .spades),
+                                             .standard(.queen, .hearts)])
+            try state.setHand(of: south, to: [.standard(.five, .diamonds)])
+            try state.setHand(of: west, to: [.standard(.ten, .spades)])
+            
+            try state.bid(.standard(6, .spades))
+            try state.bid(.pass)
+            try state.bid(.pass)
+            try state.bid(.pass)
+            
+            try state.bid(.pass)
+            try state.bid(.pass)
+            try state.bid(.pass)
+            try state.bid(.pass) // Conclude bidding.
+            
+            // N leads.
+            
+            try state.play(.standard(.ace, .spades))        // N plays As.
+        }
+        
+        #expect(throws: FiveHundredState.RuleError.mustFollowSuit.self) {
+            try state.play(.standard(.queen, .hearts))      // E plays Qh but
+                                                            // can follow suit.
+        }
+        
+        #expect(throws: Never.self) {
+            try state.play(.standard(.king, .spades))       // E plays Ks.
+            
+            try state.play(.standard(.five, .diamonds))     // S has no spades
+                                                            // and can discard.
         }
     }
 }
