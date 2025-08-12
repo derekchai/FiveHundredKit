@@ -109,6 +109,34 @@ class FiveHundredStatePlayTests {
         }
     }
     
+    @Test("Bowers count as trump suit")
+    func varTestBowersCountAsTrumpSuit() async throws {
+        try state.setHand(of: north, to: [.standard(.ace, .spades)])
+        try state.setHand(of: east, to: [.standard(.jack, .clubs),
+                                         .standard(.queen, .hearts)])
+        
+        try state.bid(.standard(6, .spades))
+        try state.bid(.pass)
+        try state.bid(.pass)
+        try state.bid(.pass)
+        
+        try state.bid(.pass)
+        try state.bid(.pass)
+        try state.bid(.pass)
+        try state.bid(.pass) // Conclude bidding; bid is 6 spades.
+        
+        try state.play(.standard(.ace, .spades))            // N plays As
+        
+        #expect(throws: Error.self) {
+            // Invalid move as Jc (left bower) is trump suited.
+            try state.play(.standard(.queen, .hearts))      // E plays Qh
+        }
+        
+        #expect(throws: Never.self) {
+            try state.play(.standard(.jack, .clubs))
+        }
+    }
+    
     
     @Test("Gameplay 1")
     func testGameplay1() async throws {
