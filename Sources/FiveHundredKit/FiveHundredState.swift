@@ -22,7 +22,11 @@ struct FiveHundredState: GameStateRepresentable {
         return players[(playerToPlayIndex + 1) % players.count]
     }
     
-    private(set) var bid: (player: Player, bid: Bid)?
+    var bid: (player: Player, bid: Bid)?
+    
+    var bids: [(player: Player, bid: Bid)] = []
+    
+    var acceptingBids: Bool = true
     
     /// The trump suit (or no trumps) for this round.
     private var trumps: Trump? {
@@ -51,15 +55,11 @@ struct FiveHundredState: GameStateRepresentable {
     
     private var jokerNominatedSuit: Suit?
     
-    private var bids: [(player: Player, bid: Bid)] = []
-    
-    private var acceptingBids: Bool = true
-    
-    private(set) var kitty: [PlayingCard] = []
+    var kitty: [PlayingCard] = []
     
     private var discards: [PlayingCard] = []
     
-    private(set) var hands: [Player: [PlayingCard]]
+    var hands: [Player: [PlayingCard]]
     
     private var trick: [(player: Player, card: PlayingCard)] = []
     
@@ -132,72 +132,5 @@ struct FiveHundredState: GameStateRepresentable {
         
         playerToPlay = nextPlayer
     }
-    
-    mutating func bid(_ bid: Bid) throws {
-        guard acceptingBids else {
-            throw BiddingError.biddingClosed
-        }
-        
-        if let lastValuedBid = bids.last(where: { $0.bid != .pass }),
-           bid != .pass {
-            guard bid > lastValuedBid.bid else {
-                throw BiddingError.invalidBid
-            }
-        }
-        
-        if bid != .pass {
-            self.bid = (playerToPlay, bid)
-        }
-        
-        bids.append((playerToPlay, bid))
-        playerToPlay = nextPlayer
-        
-        guard bids.count == players.count else { return }
-        
-        if bids.count(where: { $0.bid == .pass }) == players.count {
-            guard let lastValuedBid = self.bid else {
-                // Dead hand. Re-deal.
-                deal()
-                bids.removeAll()
-                return
-            }
-            
-            playerToPlay = lastValuedBid.player
-            acceptingBids = false
-        } else {
-            bids.removeAll()
-        }
-    }
-    
-    /// Resets kitty and hands and deals the entire 500 deck to all players
-    /// and the kitty.
-    mutating func deal() {
-        // Reset kitty and hands
-        kitty.removeAll()
-        for player in hands.keys {
-            hands[player]?.removeAll()
-        }
-        
-        var deck = PlayingCard.shuffled500Deck
-        
-        for _ in 1...3 {
-            kitty.append(deck.removeFirst())
-        }
-        
-        var i = 0
-        while !deck.isEmpty {
-            hands[players[i]]?.append(deck.removeFirst())
-            i = (i + 1) % players.count
-        }
-        
-#warning("todo: sort players' hands")
-    }
-    
-    mutating func setHand(of player: Player, to cards: [PlayingCard]) throws {
-        guard hands.keys.contains(player) else {
-            throw GameError.playerNotFound
-        }
-        
-        hands[player] = cards
-    }
+
 }
