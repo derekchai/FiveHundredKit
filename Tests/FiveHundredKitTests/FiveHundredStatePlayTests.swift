@@ -63,4 +63,75 @@ class FiveHundredStatePlayTests {
         ]) // Ah illegal to play as East must follow suit
     }
     
+    @Test("Gameplay 1")
+    func testGameplay1() async throws {
+        try state.setHand(of: north, to: FiveHundredStatePlayTests.northHand)
+        try state.setHand(of: east, to: FiveHundredStatePlayTests.eastHand)
+        try state.setHand(of: south, to: FiveHundredStatePlayTests.southHand)
+        try state.setHand(of: west, to: FiveHundredStatePlayTests.westHand)
+        
+        state.kitty = FiveHundredStatePlayTests.kitty
+        
+        #expect(Bool(false), "Implement kitty exchange")
+    }
+}
+
+extension FiveHundredStatePlayTests {
+    static let northHand: [PlayingCard] = [
+        .standard(.ace, .spades),    // A♠
+        .standard(.queen, .clubs),   // Q♣
+        .standard(.ten, .diamonds),  // 10♢
+        .standard(.four, .diamonds), // 4♢
+        .standard(.six, .spades),    // 6♠
+        .standard(.king, .hearts),   // K♡
+        .standard(.nine, .clubs),    // 9♣
+        .standard(.eight, .hearts),  // 8♡
+        .standard(.five, .diamonds), // 5♢
+        .standard(.jack, .spades)    // J♠
+    ]
+    
+    static let eastHand: [PlayingCard] = [
+        .standard(.queen, .spades),  // Q♠
+        .standard(.seven, .clubs),   // 7♣
+        .standard(.ten, .hearts),    // 10♡
+        .standard(.ace, .clubs),     // A♣
+        .standard(.nine, .spades),   // 9♠
+        .standard(.eight, .diamonds),// 8♢
+        .joker,                      // Joker
+        .standard(.five, .clubs),    // 5♣
+        .standard(.king, .diamonds), // K♢
+        .standard(.six, .clubs)      // 6♣
+    ]
+    
+    static let southHand: [PlayingCard] = [
+        .standard(.king, .spades),   // K♠
+        .standard(.queen, .hearts),  // Q♡
+        .standard(.jack, .clubs),    // J♣
+        .standard(.ten, .clubs),     // 10♣
+        .standard(.nine, .hearts),   // 9♡
+        .standard(.eight, .clubs),   // 8♣
+        .standard(.seven, .hearts),  // 7♡
+        .standard(.five, .hearts),   // 5♡
+        .standard(.seven, .diamonds),// 7♢
+        .standard(.ace, .diamonds)   // A♢
+    ]
+    
+    static let westHand: [PlayingCard] = [
+        .standard(.jack, .hearts),   // J♡
+        .standard(.ten, .spades),    // 10♠
+        .standard(.four, .hearts),   // 4♡
+        .standard(.six, .hearts),    // 6♡
+        .standard(.seven, .spades),  // 7♠
+        .standard(.nine, .diamonds), // 9♢
+        .standard(.eight, .spades),  // 8♠
+        .standard(.jack, .diamonds), // J♢
+        .standard(.king, .clubs),    // K♣
+        .standard(.five, .spades)    // 5♠
+    ]
+    
+    static let kitty: [PlayingCard] = [
+        .standard(.ace, .hearts),    // A♡
+        .standard(.six, .diamonds),  // 6♢
+        .standard(.queen, .diamonds) // Q♢
+    ]
 }
