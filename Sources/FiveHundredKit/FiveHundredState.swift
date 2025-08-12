@@ -26,11 +26,11 @@ struct FiveHundredState: GameStateRepresentable {
     
     private var acceptingBids: Bool = true
     
-    private var kitty: [PlayingCard] = []
+    private(set) var kitty: [PlayingCard] = []
     
     private var discards: [PlayingCard] = []
     
-    private var hands: [Player: [PlayingCard]]
+    private(set) var hands: [Player: [PlayingCard]]
     
     // MARK: - Initializer
     init(players: [Player]) {
@@ -72,6 +72,21 @@ struct FiveHundredState: GameStateRepresentable {
             acceptingBids = false
         } else {
             bids.removeAll()
+        }
+    }
+    
+    /// Deals the entire 500 deck to all players and the kitty.
+    mutating func deal() {
+        var deck = PlayingCard.shuffled500Deck
+        
+        for _ in 1...3 {
+            kitty.append(deck.removeFirst())
+        }
+        
+        var i = 0
+        while !deck.isEmpty {
+            hands[players[i]]?.append(deck.removeFirst())
+            i = (i + 1) % players.count
         }
     }
 }

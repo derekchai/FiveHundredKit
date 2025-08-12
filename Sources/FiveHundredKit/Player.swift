@@ -22,6 +22,6 @@ extension Player: Hashable {
     }
 
     func hash(into hasher: inout Hasher) {
-        hasher.combine(self)
+        hasher.combine(ObjectIdentifier(self))
     }
 }

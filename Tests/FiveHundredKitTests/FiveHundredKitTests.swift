@@ -7,7 +7,7 @@ import Testing
     let south = Player(name: "South")
     let west = Player(name: "West")
     
-    var state = FiveHundredState(players: [north, east, south, west])
+    let state = FiveHundredState(players: [north, east, south, west])
     
     #expect(state.playerToPlay === north)
     #expect(state.nextPlayer === east)

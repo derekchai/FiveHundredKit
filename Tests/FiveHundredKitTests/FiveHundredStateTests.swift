@@ -88,7 +88,7 @@ class FiveHundredStateTests {
         }
     }
     
-    @Test("Under bidding throws error")
+    @Test("Under-bidding throws error")
     func testUnderBidding() async throws {
         #expect(throws: Never.self) {
             try state.bid(.standard(10, .hearts))
@@ -100,6 +100,17 @@ class FiveHundredStateTests {
         
         #expect(throws: FiveHundredState.BiddingError.invalidBid.self) {
             try state.bid(.misere)
+        }
+    }
+    
+    @Test("10 cards to players and 3 cards to kitty dealt in deal")
+    func testDeal() async throws {
+        state.deal()
+        
+        #expect(state.kitty.count == 3)
+        
+        state.players.forEach { player in
+            #expect(self.state.hands[player]?.count == 10)
         }
     }
 }
