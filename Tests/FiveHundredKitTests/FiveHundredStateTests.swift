@@ -21,7 +21,8 @@ class FiveHundredStateTests {
         state = FiveHundredState(players: [north, east, south, west])
     }
     
-    @Test func testPlayerOrder() async throws {
+    @Test("Player order is as expected")
+    func testPlayerOrder() async throws {
         #expect(throws: Never.self) {
             try state.bid(.misere)
             try state.bid(.pass)
@@ -53,13 +54,15 @@ class FiveHundredStateTests {
         #expect(state.nextPlayer === east)
     }
     
-    @Test func testPlayWithoutBid() async throws {
+    @Test("Playing without any bids made throws error")
+    func testPlayWithoutBid() async throws {
         #expect(throws: FiveHundredState.GameError.noBidMade) {
             try state.play(.joker)
         }
     }
     
-    @Test func testBidding() async throws {
+    @Test("Bidding works as expected")
+    func testBidding() async throws {
         #expect(throws: Never.self) {
             try state.bid(.pass) // N
             try state.bid(.standard(6, .spades)) // E
@@ -85,7 +88,8 @@ class FiveHundredStateTests {
         }
     }
     
-    @Test func testUnderBidding() async throws {
+    @Test("Under bidding throws error")
+    func testUnderBidding() async throws {
         #expect(throws: Never.self) {
             try state.bid(.standard(10, .hearts))
         }

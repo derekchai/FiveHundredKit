@@ -10,7 +10,8 @@ import Testing
 
 struct BidTests {
 
-    @Test func testBidPoints() async throws {
+    @Test("Bid points are calculated correctly")
+    func testBidPoints() async throws {
         #expect(Bid.pass.points == 0)
         
         #expect(Bid.misere.points == 250)
@@ -29,7 +30,8 @@ struct BidTests {
         #expect(Bid.noTrumps(7).points == 220)
     }
     
-    @Test func testBidComparability() async throws {
+    @Test("Bids are comparable and equatable")
+    func testBidComparability() async throws {
         #expect(Bid.pass < Bid.standard(6, .spades))
         
         #expect(Bid.standard(6, .spades) < Bid.standard(6, .clubs))
