@@ -24,4 +24,14 @@ enum Suit: CaseIterable, CustomStringConvertible {
         case .hearts: "♡"
         }
     }
+    
+    /// Returns a set of the same-colored suits as `self`.
+    var sameColorSuits: Set<Suit> {
+        switch self {
+        case .spades, .clubs:
+            return Set([.spades, .clubs])
+        case .diamonds, .hearts:
+            return Set([.diamonds, .hearts])
+        }
+    }
 }
