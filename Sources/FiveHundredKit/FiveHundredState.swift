@@ -40,13 +40,13 @@ struct FiveHundredState: GameStateRepresentable {
     
     mutating func bid(_ bid: Bid) throws {
         guard acceptingBids else {
-            throw GameError.biddingClosed
+            throw BiddingError.biddingClosed
         }
         
         if let lastValuedBid = bids.last(where: { $0.bid != .pass }),
            bid != .pass {
             guard bid > lastValuedBid.bid else {
-                throw GameError.invalidBid
+                throw BiddingError.invalidBid
             }
         }
         

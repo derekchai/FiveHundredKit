@@ -76,7 +76,7 @@ class FiveHundredStateTests {
         // Bidding should have concluded (after all players pass in a bidding
         // round).
         
-        #expect(throws: FiveHundredState.GameError.biddingClosed.self) {
+        #expect(throws: FiveHundredState.BiddingError.biddingClosed.self) {
             try state.bid(.pass)
         }
     }
@@ -86,11 +86,11 @@ class FiveHundredStateTests {
             try state.bid(.standard(10, .hearts))
         }
         
-        #expect(throws: FiveHundredState.GameError.invalidBid.self) {
+        #expect(throws: FiveHundredState.BiddingError.invalidBid.self) {
             try state.bid(.standard(8, .hearts))
         }
         
-        #expect(throws: FiveHundredState.GameError.invalidBid.self) {
+        #expect(throws: FiveHundredState.BiddingError.invalidBid.self) {
             try state.bid(.misere)
         }
     }

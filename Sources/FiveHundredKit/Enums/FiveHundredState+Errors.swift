@@ -8,7 +8,7 @@
 import Foundation
 
 extension FiveHundredState {
-    enum GameError: Error, LocalizedError {
+    enum BiddingError: Error, LocalizedError {
         case invalidBid
         case biddingClosed
         
