@@ -20,7 +20,8 @@ protocol GameStateRepresentable {
     /// A list of all possible moves playable from this state.
     var moves: [Move] { get }
     
-    /// Plays a move. Must update `playerToPlay`.
+    /// Plays a move. Must update `playerToPlay`. Throws if an illegal move
+    /// played.
     /// - Parameter \_: The move to play.
-    mutating func play(_: Move)
+    mutating func play(_: Move) throws
 }
