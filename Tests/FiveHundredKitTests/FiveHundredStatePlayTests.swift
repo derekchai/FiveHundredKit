@@ -63,6 +63,29 @@ class FiveHundredStatePlayTests {
         ]) // Ah illegal to play as East must follow suit
     }
     
+    @Test("Kitty added to bid-winner's hand")
+    func testKittyAddedToBidWinnerHand() async throws {
+        let kitty: [PlayingCard] = [
+            .joker,
+            .standard(.jack, .hearts),
+            .standard(.jack, .diamonds)
+        ]
+        
+        state.kitty = kitty
+        
+        try state.bid(.standard(6, .spades))    // N
+        try state.bid(.pass)
+        try state.bid(.pass)
+        try state.bid(.pass)
+        
+        try state.bid(.pass)
+        try state.bid(.pass)
+        try state.bid(.pass)
+        try state.bid(.pass)                    // N wins bid with 6 spades.
+        
+        #expect(state.hands[north] == kitty)
+    }
+    
     @Test("Gameplay 1")
     func testGameplay1() async throws {
         try state.setHand(of: north, to: FiveHundredStatePlayTests.northHand)

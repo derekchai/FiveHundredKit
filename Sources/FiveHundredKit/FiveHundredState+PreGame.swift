@@ -35,8 +35,11 @@ extension FiveHundredState {
                 return
             }
             
+            // Bid won
             playerToPlay = lastValuedBid.player
             acceptingBids = false
+            hands[lastValuedBid.player]?.append(contentsOf: kitty)
+            kitty.removeAll()
         } else {
             bids.removeAll()
         }
