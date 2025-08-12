@@ -1,5 +1,5 @@
 //
-//  FiveHundredStateTests.swift
+//  FiveHundredStatePreGameTests.swift
 //  FiveHundredKit
 //
 //  Created by Derek Chai on 12/08/2025.
@@ -9,7 +9,7 @@ import Testing
 @testable import FiveHundredKit
 
 @Suite("Pre-Game Tests")
-class FiveHundredStateTests {
+class FiveHundredStatePreGameTests {
     let north = Player(name: "North")
     let east = Player(name: "East")
     let south = Player(name: "South")
