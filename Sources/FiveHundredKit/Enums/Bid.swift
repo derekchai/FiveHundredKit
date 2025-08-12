@@ -43,4 +43,13 @@ extension Bid {
             return summand + (int - 6) * 100
         }
     }
+    
+    var trumps: Trump {
+        switch self {
+        case .pass, .misere, .openMisere, .noTrumps:
+            return .noTrumps
+        case .standard(_, let suit):
+            return .trump(suit)
+        }
+    }
 }
