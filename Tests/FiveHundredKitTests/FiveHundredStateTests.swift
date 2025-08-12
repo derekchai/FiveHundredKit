@@ -19,6 +19,13 @@ class FiveHundredStateTests {
         west = Player(name: "West")
         
         state = FiveHundredState(players: [north, east, south, west])
+        
+        do {
+            try state.bid(.misere)
+            try state.bid(.pass)
+            try state.bid(.pass)
+            try state.bid(.pass)
+        } catch {}
     }
     
     @Test func testPlayerOrder() async throws {
