@@ -6,6 +6,7 @@
 //
 
 struct FiveHundredState: GameStateRepresentable {
+    // MARK: - Properties
     var moves: [PlayingCard] {
         []
     }
@@ -25,11 +26,17 @@ struct FiveHundredState: GameStateRepresentable {
     
     private var acceptingBids: Bool = true
     
+    private var kitty: [PlayingCard] = []
+    
+    private var discards: [PlayingCard] = []
+    
+    // MARK: - Initializer
     init(players: [Player]) {
         self.players = players
         self.playerToPlay = players[0]
     }
     
+    // MARK: - Functions
     mutating func play(_: PlayingCard) throws {
         guard bid != nil else {
             throw GameError.noBidMade
