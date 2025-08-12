@@ -28,6 +28,18 @@ struct FiveHundredState: GameStateRepresentable {
     
     var acceptingBids: Bool = true
     
+    var kitty: [PlayingCard] = []
+    
+    var hands: [Player: [PlayingCard]]
+    
+    // MARK: Private Properties
+    private var jokerNominatedSuit: Suit?
+    
+    private var discards: [PlayingCard] = []
+    
+    private var trick: [(player: Player, card: PlayingCard)] = []
+    
+    // MARK: Computed Properties
     /// The trump suit (or no trumps) for this round.
     private var trumps: Trump? {
         guard let bid else { return nil }
@@ -52,16 +64,6 @@ struct FiveHundredState: GameStateRepresentable {
             return suit
         }
     }
-    
-    private var jokerNominatedSuit: Suit?
-    
-    var kitty: [PlayingCard] = []
-    
-    private var discards: [PlayingCard] = []
-    
-    var hands: [Player: [PlayingCard]]
-    
-    private var trick: [(player: Player, card: PlayingCard)] = []
     
     // MARK: - Initializer
     init(players: [Player]) {
