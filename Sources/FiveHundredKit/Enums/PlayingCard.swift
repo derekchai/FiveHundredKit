@@ -27,10 +27,12 @@ enum PlayingCard: MoveRepresentable {
             .ace
         ]
         
-        return [.joker]
+        let deck: [PlayingCard] = [.joker]
         + Suit.redSuits.map { .standard(.four, $0 ) }
         + fullRanks.flatMap { rank in
             Suit.allCases.map { suit in .standard(rank, suit)}}
+        
+        return deck.shuffled()
     }
 }
 
