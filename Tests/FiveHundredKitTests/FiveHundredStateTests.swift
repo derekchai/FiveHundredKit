@@ -215,6 +215,27 @@ class FiveHundredStateTests {
         #expect( state.hands[north] != northHand
                  || state.hands[east] != eastHand )
     }
+    
+    @Test("Bid after redeal")
+    func testBidAfterRedeal() async throws {
+        await #expect(throws: Never.self) {
+            try await testRedeal()
+        }
+        
+        try state.bid(.standard(6, .spades))
+        try state.bid(.pass)
+        try state.bid(.pass)
+        try state.bid(.pass)
+        
+        try state.bid(.pass)
+        try state.bid(.pass)
+        try state.bid(.pass)
+        try state.bid(.pass)            // Bidding concludes.
+        
+        #expect(throws: FiveHundredState.BiddingError.biddingClosed.self) {
+            try state.bid(.pass)
+        }
+    }
 }
 
 
