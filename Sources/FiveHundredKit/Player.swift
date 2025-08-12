@@ -15,3 +15,13 @@ class Player {
         self.name = name
     }
 }
+
+extension Player: Hashable {
+    static func == (lhs: Player, rhs: Player) -> Bool {
+        return lhs === rhs
+    }
+
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(self)
+    }
+}
