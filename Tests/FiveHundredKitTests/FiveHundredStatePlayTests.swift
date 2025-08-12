@@ -8,7 +8,7 @@
 import Testing
 @testable import FiveHundredKit
 
-@Suite("Gameplay")
+@Suite("Gameplay Tests")
 class FiveHundredStatePlayTests {
     
     let north = Player(name: "North")
@@ -63,28 +63,52 @@ class FiveHundredStatePlayTests {
         ]) // Ah illegal to play as East must follow suit
     }
     
-    @Test("Kitty added to bid-winner's hand")
-    func testKittyAddedToBidWinnerHand() async throws {
-        let kitty: [PlayingCard] = [
-            .joker,
-            .standard(.jack, .hearts),
-            .standard(.jack, .diamonds)
-        ]
+    @Test("Must follow suit")
+    func testMustFollowSuit() async throws {
+        #expect(throws: Never.self) {
+            try state.setHand(of: north, to: [.standard(.ace, .spades)])
+            try state.setHand(of: east, to: [.standard(.king, .spades),
+                                             .standard(.queen, .hearts)])
+            try state.setHand(of: south, to: [.standard(.five, .diamonds)])
+            try state.setHand(of: west, to: [.joker, .standard(.five, .hearts)])
+            
+            try state.bid(.standard(6, .spades))
+            try state.bid(.pass)
+            try state.bid(.pass)
+            try state.bid(.pass)
+            
+            try state.bid(.pass)
+            try state.bid(.pass)
+            try state.bid(.pass)
+            try state.bid(.pass) // Conclude bidding; bid is 6 spades.
+            
+            // N leads.
+            
+            try state.play(.standard(.ace, .spades))        // N plays As.
+        }
         
-        state.kitty = kitty
+        #expect(throws: FiveHundredState.RuleError.mustFollowSuit.self) {
+            try state.play(.standard(.queen, .hearts))      // E plays Qh but
+            // can follow suit.
+        }
         
-        try state.bid(.standard(6, .spades))    // N
-        try state.bid(.pass)
-        try state.bid(.pass)
-        try state.bid(.pass)
+        #expect(throws: Never.self) {
+            try state.play(.standard(.king, .spades))       // E plays Ks.
+            
+            try state.play(.standard(.five, .diamonds))     // S has no spades
+            // and can discard.
+        }
         
-        try state.bid(.pass)
-        try state.bid(.pass)
-        try state.bid(.pass)
-        try state.bid(.pass)                    // N wins bid with 6 spades.
+        #expect(throws: FiveHundredState.RuleError.mustFollowSuit.self) {
+            // W tries to play 5h but can follow suit with joker.
+            try state.play(.standard(.five, .hearts))
+        }
         
-        #expect(state.hands[north] == kitty)
+        #expect(throws: Never.self) {
+            try state.play(.joker)                          // W plays joker.
+        }
     }
+    
     
     @Test("Gameplay 1")
     func testGameplay1() async throws {
