@@ -162,8 +162,15 @@ struct FiveHundredState: GameStateRepresentable {
         }
     }
     
-    /// Deals the entire 500 deck to all players and the kitty.
+    /// Resets kitty and hands and deals the entire 500 deck to all players
+    /// and the kitty.
     mutating func deal() {
+        // Reset kitty and hands
+        kitty.removeAll()
+        for player in hands.keys {
+            hands[player]?.removeAll()
+        }
+        
         var deck = PlayingCard.shuffled500Deck
         
         for _ in 1...3 {
