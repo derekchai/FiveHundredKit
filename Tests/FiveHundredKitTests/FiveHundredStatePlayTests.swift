@@ -230,7 +230,7 @@ class FiveHundredStatePlayTests {
             try state.play(.standard(.five, .hearts))   // S: 5h
         }
         
-        #expect(state.playerToPlay === east)
+        #expect(state.playerToPlay === east) // E wins trick with joker
         
         #expect(throws: Never.self) {
             try state.play(.standard(.ten, .hearts))    // E: Th
@@ -238,6 +238,8 @@ class FiveHundredStatePlayTests {
             try state.play(.standard(.jack, .diamonds)) // W: Jd
             try state.play(.standard(.king, .hearts))   // N: Kh
         }
+        
+        #expect(state.playerToPlay === west) // W wins with Jd (off-jack)
     }
 }
 
