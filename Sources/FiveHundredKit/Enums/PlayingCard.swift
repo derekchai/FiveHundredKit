@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum PlayingCard: MoveRepresentable, Equatable {
+public enum PlayingCard: MoveRepresentable, Equatable {
     case joker
     case standard(Rank, Suit)
     
@@ -160,7 +160,7 @@ enum PlayingCard: MoveRepresentable, Equatable {
 }
 
 extension PlayingCard: CustomStringConvertible {
-    var description: String {
+    public var description: String {
         switch self {
         case .joker:
             return "Joker"

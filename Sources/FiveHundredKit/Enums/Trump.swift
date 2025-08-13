@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum Trump {
+public enum Trump {
     case noTrumps
     case trump(Suit)
 }

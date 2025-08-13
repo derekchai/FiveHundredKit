@@ -5,13 +5,13 @@
 //  Created by Derek Chai on 12/08/2025.
 //
 
-struct FiveHundredState: GameStateRepresentable {
+public struct FiveHundredState: GameStateRepresentable {
     // MARK: - Properties
-    var players: [Player] = []
+    public var players: [Player] = []
     
-    var playerToPlay: Player
+    public var playerToPlay: Player
     
-    var nextPlayer: Player {
+    public var nextPlayer: Player {
         let playerToPlayIndex = players.firstIndex { $0 === playerToPlay }!
         return players[(playerToPlayIndex + 1) % players.count]
     }
@@ -36,7 +36,7 @@ struct FiveHundredState: GameStateRepresentable {
     // MARK: Computed Properties
     /// Returns all legal moves (i.e. cards able to be played) for the player
     /// to play.
-    var moves: [PlayingCard] {
+    public var moves: [PlayingCard] {
         var moves = [PlayingCard]()
         
         for card in hands[playerToPlay]! {
@@ -191,7 +191,7 @@ struct FiveHundredState: GameStateRepresentable {
         }
     }
     
-    mutating func play(_ card: PlayingCard) throws {
+    public mutating func play(_ card: PlayingCard) throws {
         guard bid != nil else {
             throw GameError.noBidMade
         }

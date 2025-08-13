@@ -7,13 +7,13 @@
 
 import Foundation
 
-enum Suit: CaseIterable, CustomStringConvertible {
+public enum Suit: CaseIterable, CustomStringConvertible {
     case spades
     case clubs
     case diamonds
     case hearts
     
-    var description: String {
+    public var description: String {
         switch self {
         case .spades: "♠"
         case .clubs: "♣"

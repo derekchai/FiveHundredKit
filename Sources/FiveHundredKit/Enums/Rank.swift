@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum Rank: CaseIterable, CustomStringConvertible {
+public enum Rank: CaseIterable, CustomStringConvertible {
     // 2s, 3s, black 4s removed in 500.
     case four
     case five
@@ -21,7 +21,7 @@ enum Rank: CaseIterable, CustomStringConvertible {
     case king
     case ace
     
-    var description: String {
+    public var description: String {
         switch self {
         case .four: "4"
         case .five: "5"

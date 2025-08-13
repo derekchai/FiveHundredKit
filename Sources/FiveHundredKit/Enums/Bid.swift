@@ -5,7 +5,7 @@
 //  Created by Derek Chai on 12/08/2025.
 //
 
-enum Bid {
+public enum Bid {
     case pass
     
     case misere

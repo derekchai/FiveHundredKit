@@ -6,11 +6,11 @@
 //
 
 extension Bid: Comparable {
-    static func == (lhs: Bid, rhs: Bid) -> Bool {
+    public static func == (lhs: Bid, rhs: Bid) -> Bool {
         return lhs.points == rhs.points
     }
 
-    static func < (lhs: Bid, rhs: Bid) -> Bool {
+    public static func < (lhs: Bid, rhs: Bid) -> Bool {
         return lhs.points < rhs.points
     }
 }

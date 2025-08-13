@@ -5,7 +5,7 @@
 //  Created by Derek Chai on 12/08/2025.
 //
 
-protocol GameStateRepresentable {
+public protocol GameStateRepresentable {
     associatedtype Move: MoveRepresentable
     
     /// The players in the game.
