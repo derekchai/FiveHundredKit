@@ -154,7 +154,17 @@ struct FiveHundredState: GameStateRepresentable {
         
         trick.append((playerToPlay, card))
         
-        playerToPlay = nextPlayer
+        if trick.count == players.count {
+            guard let winner = trick.max(by: cardRank)?.player else {
+                fatalError("Winner of trick could not be determined")
+            }
+            
+            playerToPlay = winner
+            
+            trick.removeAll()
+        } else {
+            playerToPlay = nextPlayer
+        }
     }
     
     /// Discards `cards` from the hand of the winner of the bid.
@@ -165,5 +175,17 @@ struct FiveHundredState: GameStateRepresentable {
         }
         
         hands[winner]?.removeAll { cards.contains($0) }
+    }
+    
+    private var cardRank: (
+        (player: Player, card: PlayingCard),
+        (player: Player, card: PlayingCard)
+    ) -> Bool {
+        { p1, p2 in
+            guard let leadSuit else { return false }
+            guard let trumps else { return false }
+            
+            return !p1.card.beats(p2.card, leadSuit: leadSuit, trumps: trumps)
+        }
     }
 }

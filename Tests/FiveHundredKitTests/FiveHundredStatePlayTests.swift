@@ -160,6 +160,39 @@ class FiveHundredStatePlayTests {
         }
     }
     
+    @Test("Trick winner leads next bid")
+    func testTrickWinnerLeadsNextBid() async throws {
+        #expect(throws: Never.self) {
+            try state.setHand(of: north, to: [.standard(.four, .hearts)])
+            try state.setHand(of: east, to: [.standard(.five, .hearts)])
+            try state.setHand(of: south, to: [.standard(.six, .hearts)])
+            try state.setHand(of: west, to: [.standard(.seven, .hearts)])
+        }
+        
+        #expect(throws: Never.self) {
+            try state.bid(.noTrumps(6))     // N
+            try state.bid(.pass)
+            try state.bid(.pass)
+            try state.bid(.pass)
+            
+            try state.bid(.pass)
+            try state.bid(.pass)
+            try state.bid(.pass)
+            try state.bid(.pass)            // N wins bid with 6NT
+        }
+        
+        #expect(throws: Never.self) {
+            try state.play(.standard(.four, .hearts))   // N: 4h
+            try state.play(.standard(.five, .hearts))   // E: 5h
+            try state.play(.standard(.six, .hearts))    // S: 6h
+            try state.play(.standard(.seven, .hearts))  // W: 7h
+        }
+        
+        // West wins trick with 7h
+        
+        #expect(state.playerToPlay === west)
+    }
+    
     @Test("Gameplay 1")
     func testGameplay1() async throws {
         try state.setHand(of: north, to: FiveHundredStatePlayTests.northHand)
@@ -169,66 +202,100 @@ class FiveHundredStatePlayTests {
         
         state.kitty = FiveHundredStatePlayTests.kitty
         
-        #expect(Bool(false), "Implement kitty exchange")
+        // North: AJ6s T54d Q9c K8h
+        // East : Joker Q9s K8d A765c Th
+        // South: Ks A7d JT8c Q975h
+        // West : T875s J9d Kc J64h
+        
+        #expect(throws: Never.self) {
+            try state.bid(.standard(6, .spades))    // N: 6s
+            try state.bid(.noTrumps(6))             // E: 6NT
+            try state.bid(.standard(7, .diamonds))  // S: 7d
+            try state.bid(.standard(8, .hearts))    // W: 7h
+            
+            try state.bid(.pass)
+            try state.bid(.pass)
+            try state.bid(.pass)
+            try state.bid(.pass)    // Bidding concludes. West wins (7 hearts)
+        }
+        
+        #expect(state.playerToPlay === west)
+        
+        #expect(throws: Never.self) {
+            // West leads first trick.
+            
+            try state.play(.standard(.four, .hearts))   // W: Jd
+            try state.play(.standard(.eight, .hearts))  // N: 8h
+            try state.play(.joker)                      // E: Joker
+            try state.play(.standard(.five, .hearts))   // S: 5h
+        }
+        
+        #expect(state.playerToPlay === east)
+        
+        #expect(throws: Never.self) {
+            try state.play(.standard(.ten, .hearts))    // E: Th
+            try state.play(.standard(.queen, .hearts))  // S: Qh
+            try state.play(.standard(.jack, .diamonds)) // W: Jd
+            try state.play(.standard(.king, .hearts))   // N: Kh
+        }
     }
 }
 
 extension FiveHundredStatePlayTests {
     static let northHand: [PlayingCard] = [
         .standard(.ace, .spades),    // A♠
-        .standard(.queen, .clubs),   // Q♣
-        .standard(.ten, .diamonds),  // 10♢
-        .standard(.four, .diamonds), // 4♢
+        .standard(.jack, .spades),    // J♠
         .standard(.six, .spades),    // 6♠
-        .standard(.king, .hearts),   // K♡
-        .standard(.nine, .clubs),    // 9♣
-        .standard(.eight, .hearts),  // 8♡
+        .standard(.ten, .diamonds),  // 10♢
         .standard(.five, .diamonds), // 5♢
-        .standard(.jack, .spades)    // J♠
+        .standard(.four, .diamonds), // 4♢
+        .standard(.queen, .clubs),   // Q♣
+        .standard(.nine, .clubs),    // 9♣
+        .standard(.king, .hearts),   // K♡
+        .standard(.eight, .hearts),  // 8♡
     ]
     
     static let eastHand: [PlayingCard] = [
-        .standard(.queen, .spades),  // Q♠
-        .standard(.seven, .clubs),   // 7♣
-        .standard(.ten, .hearts),    // 10♡
-        .standard(.ace, .clubs),     // A♣
-        .standard(.nine, .spades),   // 9♠
-        .standard(.eight, .diamonds),// 8♢
         .joker,                      // Joker
-        .standard(.five, .clubs),    // 5♣
-        .standard(.king, .diamonds), // K♢
-        .standard(.six, .clubs)      // 6♣
+        .standard(.queen, .spades),   // Q♠
+        .standard(.nine, .spades),    // 9♠
+        .standard(.king, .diamonds),  // K♢
+        .standard(.eight, .diamonds), // 8♢
+        .standard(.ace, .clubs),      // A♣
+        .standard(.seven, .clubs),    // 7♣
+        .standard(.six, .clubs),      // 6♣
+        .standard(.five, .clubs),     // 5♣
+        .standard(.ten, .hearts)      // 10♡
     ]
     
     static let southHand: [PlayingCard] = [
-        .standard(.king, .spades),   // K♠
-        .standard(.queen, .hearts),  // Q♡
-        .standard(.jack, .clubs),    // J♣
-        .standard(.ten, .clubs),     // 10♣
-        .standard(.nine, .hearts),   // 9♡
-        .standard(.eight, .clubs),   // 8♣
-        .standard(.seven, .hearts),  // 7♡
-        .standard(.five, .hearts),   // 5♡
-        .standard(.seven, .diamonds),// 7♢
-        .standard(.ace, .diamonds)   // A♢
+        .standard(.king, .spades),    // K♠
+        .standard(.ace, .diamonds),   // A♢
+        .standard(.seven, .diamonds), // 7♢
+        .standard(.jack, .clubs),     // J♣
+        .standard(.ten, .clubs),      // 10♣
+        .standard(.eight, .clubs),    // 8♣
+        .standard(.queen, .hearts),   // Q♡
+        .standard(.nine, .hearts),    // 9♡
+        .standard(.seven, .hearts),   // 7♡
+        .standard(.five, .hearts)     // 5♡
     ]
     
     static let westHand: [PlayingCard] = [
-        .standard(.jack, .hearts),   // J♡
-        .standard(.ten, .spades),    // 10♠
-        .standard(.four, .hearts),   // 4♡
-        .standard(.six, .hearts),    // 6♡
-        .standard(.seven, .spades),  // 7♠
-        .standard(.nine, .diamonds), // 9♢
-        .standard(.eight, .spades),  // 8♠
-        .standard(.jack, .diamonds), // J♢
-        .standard(.king, .clubs),    // K♣
-        .standard(.five, .spades)    // 5♠
+        .standard(.ten, .spades),     // 10♠
+        .standard(.eight, .spades),   // 8♠
+        .standard(.seven, .spades),   // 7♠
+        .standard(.five, .spades),    // 5♠
+        .standard(.nine, .diamonds),  // 9♢
+        .standard(.jack, .diamonds),  // J♢
+        .standard(.king, .clubs),     // K♣
+        .standard(.jack, .hearts),    // J♡
+        .standard(.six, .hearts),     // 6♡
+        .standard(.four, .hearts)     // 4♡
     ]
     
     static let kitty: [PlayingCard] = [
-        .standard(.ace, .hearts),    // A♡
-        .standard(.six, .diamonds),  // 6♢
-        .standard(.queen, .diamonds) // Q♢
-    ]
-}
+        .standard(.six, .diamonds),   // 6♢
+        .standard(.queen, .diamonds), // Q♢
+        .standard(.ace, .hearts)      // A♡
+    ]}

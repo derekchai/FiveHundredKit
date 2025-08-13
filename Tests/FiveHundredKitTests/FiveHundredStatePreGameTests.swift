@@ -70,6 +70,8 @@ class FiveHundredStatePreGameTests {
             try state.play(.standard(.ten, .spades))            // W: Ts
         }
         
+        // North wins trick with As (spades trump)
+        
         #expect(state.playerToPlay === north)
         #expect(state.nextPlayer === east)
     }
