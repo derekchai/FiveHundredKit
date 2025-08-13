@@ -35,7 +35,7 @@ enum PlayingCard: MoveRepresentable, Equatable {
         return deck.shuffled()
     }
     
-    private var noTrumpsRanking: Int {
+    var noTrumpsRanking: Int {
         switch self {
         case .joker: return 15
         case .standard(let rank, _):

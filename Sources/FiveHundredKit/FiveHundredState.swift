@@ -88,14 +88,35 @@ struct FiveHundredState: GameStateRepresentable {
         }
     }
     
-    /// A predicate for comparison between two ``PlayingCard``s, determining
-    /// which beats the other (taking into account lead and trump suits).
-    private var cardRankPredicate: (PlayingCard, PlayingCard) -> Bool {
-        {
-            guard let leadSuit else { return false }
-            guard let trumps else { return false }
-            
-            return !$0.beats($1, leadSuit: leadSuit, trumps: trumps)
+    /// A predicate for sorting an array of ``PlayingCard``s by ascending
+    /// rank-suit order. Rank order: `spades < diamonds < clubs < hearts
+    /// < joker`.
+    private var handSortingPredicate: (PlayingCard, PlayingCard) -> Bool {
+        func rank(of suit: Suit) -> Int {
+            switch suit {
+            case .spades: return 0
+            case .clubs: return 2
+            case .diamonds: return 1
+            case .hearts: return 3
+            }
+        }
+        
+        return { card1, card2 in
+            switch card1 {
+            case .joker:
+                return false
+            case .standard(_, let suit1):
+                switch card2 {
+                case .joker:
+                    return true
+                case .standard(_, let suit2):
+                    if suit1 != suit2 {
+                        return rank(of: suit1) < rank(of: suit2)
+                    } else {
+                        return card1.noTrumpsRanking < card2.noTrumpsRanking
+                    }
+                }
+            }
         }
     }
     
@@ -209,6 +230,6 @@ struct FiveHundredState: GameStateRepresentable {
     func sortedHand(of player: Player) -> [PlayingCard]? {
         guard let hand = hands[player] else { return nil }
         
-        return hand.sorted(by: cardRankPredicate)
+        return hand.sorted(by: handSortingPredicate)
     }
 }
