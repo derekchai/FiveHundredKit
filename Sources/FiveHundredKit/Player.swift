@@ -25,3 +25,9 @@ extension Player: Hashable {
         hasher.combine(ObjectIdentifier(self))
     }
 }
+
+extension Player: CustomStringConvertible {
+    var description: String {
+        return self.name
+    }
+}
