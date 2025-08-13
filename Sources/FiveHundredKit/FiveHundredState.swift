@@ -91,7 +91,7 @@ struct FiveHundredState: GameStateRepresentable {
     /// A predicate for sorting an array of ``PlayingCard``s by ascending
     /// rank-suit order. Rank order: `spades < diamonds < clubs < hearts
     /// < joker`.
-    private var handSortingPredicate: (PlayingCard, PlayingCard) -> Bool {
+    static var handSortingPredicate: (PlayingCard, PlayingCard) -> Bool {
         func rank(of suit: Suit) -> Int {
             switch suit {
             case .spades: return 0
@@ -227,9 +227,9 @@ struct FiveHundredState: GameStateRepresentable {
     /// - Parameter player: A player.
     /// - Returns: The player's sorted hand, or `nil` if the player was not
     /// found.
-    func sortedHand(of player: Player) -> [PlayingCard]? {
+    func hand(of player: Player) -> [PlayingCard]? {
         guard let hand = hands[player] else { return nil }
         
-        return hand.sorted(by: handSortingPredicate)
+        return hand
     }
 }

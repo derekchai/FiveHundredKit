@@ -66,7 +66,9 @@ extension FiveHundredState {
             i = (i + 1) % players.count
         }
         
-#warning("todo: sort players' hands")
+        for player in players {
+            hands[player]?.sort(by: FiveHundredState.handSortingPredicate)
+        }
     }
     
     mutating func setHand(of player: Player, to cards: [PlayingCard]) throws {
