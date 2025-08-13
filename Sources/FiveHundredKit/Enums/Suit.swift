@@ -13,9 +13,6 @@ enum Suit: CaseIterable, CustomStringConvertible {
     case diamonds
     case hearts
     
-    static let redSuits: [Suit] = [.diamonds, .hearts]
-    static let blackSuits: [Suit] = [.spades, .clubs]
-    
     var description: String {
         switch self {
         case .spades: "♠"
