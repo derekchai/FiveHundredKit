@@ -34,6 +34,129 @@ enum PlayingCard: MoveRepresentable, Equatable {
         
         return deck.shuffled()
     }
+    
+    private var noTrumpsRanking: Int {
+        switch self {
+        case .joker: return 15
+        case .standard(let rank, _):
+            switch rank {
+            case .four: return 4
+            case .five: return 5
+            case .six: return 6
+            case .seven: return 7
+            case .eight: return 8
+            case .nine: return 9
+            case .ten: return 10
+            case .jack: return 11
+            case .queen: return 12
+            case .king: return 13
+            case .ace: return 14
+            }
+        }
+    }
+    
+    private var trumpsRanking: Int {
+        switch self {
+        case .joker:
+            return 16
+        case .standard(let rank, _):
+            switch rank {
+            case .four: return 4
+            case .five: return 5
+            case .six: return 6
+            case .seven: return 7
+            case .eight: return 8
+            case .nine: return 9
+            case .ten: return 10
+            case .queen: return 12
+            case .king: return 13
+            case .ace: return 14
+            case .jack: return 15
+            }
+        }
+    }
+    
+    /// Determines whether `self` beats `card` in terms of ranking, taking
+    /// into account trump suits (and the changed order; i.e. bowers). Assumes
+    /// that both cards are of the same suit (taking into account bowers/jokers
+    /// being trump suit).
+    /// - Parameters:
+    ///   - card: The card to compare against.
+    ///   - trumps: The trump suit (or no trumps).
+    /// - Returns: `true` if `self` is stronger than `card`; `false` otherwise.
+    func beats(_ other: PlayingCard, leadSuit: Suit, trumps: Trump) -> Bool {
+        switch trumps {
+        case .noTrumps:
+            switch self {
+            case .joker:
+                return other != .joker
+            case .standard(_, let thisSuit):
+                switch other {
+                case .joker:
+                    return false
+                case .standard(_, let otherSuit):
+                    if thisSuit == leadSuit && otherSuit != leadSuit {
+                        return true
+                    } else if thisSuit != leadSuit && otherSuit == leadSuit {
+                        return false
+                    } else if thisSuit == otherSuit {
+                        return self.noTrumpsRanking > other.noTrumpsRanking
+                    } else {
+                        return false
+                    }
+                }
+            }
+            
+        case .trump(let trumpSuit):
+            switch self {
+            case .joker:
+                return other != .joker
+            case .standard(_, let thisSuit):
+                switch other {
+                case .joker:
+                    return false
+                case .standard(_, let otherSuit):
+                    let thisTrumpSuited = thisSuit == trumpSuit
+                    || self.isOffJack(trumpSuit: trumpSuit)
+                    
+                    let otherTrumpSuited = otherSuit == trumpSuit
+                    || other.isOffJack(trumpSuit: trumpSuit)
+                    
+                    if thisTrumpSuited, !otherTrumpSuited {
+                        return true
+                    } else if !thisTrumpSuited, otherTrumpSuited {
+                        return false
+                    } else if thisTrumpSuited, otherTrumpSuited {
+                        return self.trumpsRanking > other.trumpsRanking
+                    } else {
+                        if thisSuit == leadSuit, otherSuit != leadSuit {
+                            return true
+                        } else if thisSuit != leadSuit, otherSuit == leadSuit {
+                            return false
+                        } else if thisSuit == leadSuit, otherSuit == leadSuit {
+                            return self.noTrumpsRanking > other.noTrumpsRanking
+                        } else {
+                            return false
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    /// Determines whether this ``PlayingCard`` is the off-jack (jack of
+    /// the same colour as the trump suit).
+    /// - Parameter trumpSuit: The trump suit.
+    /// - Returns: `true` if this is the off-jack.
+    private func isOffJack(trumpSuit: Suit) -> Bool {
+        guard case .standard(let rank, let suit) = self else {
+            return false
+        }
+        
+        guard rank == .jack else { return false }
+        
+        return suit.sameColorSuits.contains(trumpSuit)
+    }
 }
 
 extension PlayingCard: CustomStringConvertible {
