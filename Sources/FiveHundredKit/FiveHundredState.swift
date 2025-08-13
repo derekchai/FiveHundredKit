@@ -88,6 +88,17 @@ struct FiveHundredState: GameStateRepresentable {
         }
     }
     
+    /// A predicate for comparison between two ``PlayingCard``s, determining
+    /// which beats the other (taking into account lead and trump suits).
+    private var cardRankPredicate1: (PlayingCard, PlayingCard) -> Bool {
+        {
+            guard let leadSuit else { return false }
+            guard let trumps else { return false }
+            
+            return !$0.beats($1, leadSuit: leadSuit, trumps: trumps)
+        }
+    }
+    
     // MARK: - Initializer
     init(players: [Player]) {
         self.players = players
@@ -189,5 +200,15 @@ struct FiveHundredState: GameStateRepresentable {
         }
         
         hands[winner]?.removeAll { cards.contains($0) }
+    }
+    
+    /// Returns `player`'s sorted hand.
+    /// - Parameter player: A player.
+    /// - Returns: The player's sorted hand, or `nil` if the player was not
+    /// found.
+    func sortedHand(of player: Player) -> [PlayingCard]? {
+        guard let hand = hands[player] else { return nil }
+        
+        return hand.sorted(by: cardRankPredicate1)
     }
 }
