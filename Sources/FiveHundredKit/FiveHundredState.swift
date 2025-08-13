@@ -16,15 +16,15 @@ public struct FiveHundredState: GameStateRepresentable {
         return players[(playerToPlayIndex + 1) % players.count]
     }
     
-    var bid: (player: Player, bid: Bid)?
+    public var bid: (player: Player, bid: Bid)?
     
-    var bids: [(player: Player, bid: Bid)] = []
+    public var bids: [(player: Player, bid: Bid)] = []
     
-    var acceptingBids: Bool = true
+    public var acceptingBids: Bool = true
     
-    var kitty: [PlayingCard] = []
+    public var kitty: [PlayingCard] = []
     
-    var hands: [Player: [PlayingCard]]
+    public var hands: [Player: [PlayingCard]]
     
     // MARK: Private Properties
     private var jokerNominatedSuit: Suit?
@@ -91,7 +91,7 @@ public struct FiveHundredState: GameStateRepresentable {
     /// A predicate for sorting an array of ``PlayingCard``s by ascending
     /// rank-suit order. Rank order: `spades < diamonds < clubs < hearts
     /// < joker`.
-    static var handSortingPredicate: (PlayingCard, PlayingCard) -> Bool {
+    public static var handSortingPredicate: (PlayingCard, PlayingCard) -> Bool {
         func rank(of suit: Suit) -> Int {
             switch suit {
             case .spades: return 0
@@ -121,7 +121,7 @@ public struct FiveHundredState: GameStateRepresentable {
     }
     
     // MARK: - Initializer
-    init(players: [Player]) {
+    public init(players: [Player]) {
         self.players = players
         self.playerToPlay = players[0]
         self.hands = Dictionary(uniqueKeysWithValues: players.map { ($0, []) })
@@ -215,7 +215,7 @@ public struct FiveHundredState: GameStateRepresentable {
     
     /// Discards `cards` from the hand of the winner of the bid.
     /// - Parameter cards: The cards to discard.
-    mutating func discardFromBidWinner(cards: [PlayingCard]) {
+    public mutating func discardFromBidWinner(cards: [PlayingCard]) {
         guard let winner = bid?.player else {
             fatalError("Bid must not be nil")
         }
@@ -227,7 +227,7 @@ public struct FiveHundredState: GameStateRepresentable {
     /// - Parameter player: A player.
     /// - Returns: The player's sorted hand, or `nil` if the player was not
     /// found.
-    func hand(of player: Player) -> [PlayingCard]? {
+    public func hand(of player: Player) -> [PlayingCard]? {
         guard let hand = hands[player] else { return nil }
         
         return hand

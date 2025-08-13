@@ -16,7 +16,7 @@ public enum Bid {
 }
 
 extension Bid {
-    var points: Int {
+    public var points: Int {
         switch self {
         case .pass:
             return 0
@@ -44,7 +44,7 @@ extension Bid {
         }
     }
     
-    var trumps: Trump {
+    public var trumps: Trump {
         switch self {
         case .pass, .misere, .openMisere, .noTrumps:
             return .noTrumps

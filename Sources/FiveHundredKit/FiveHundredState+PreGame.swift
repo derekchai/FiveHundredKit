@@ -6,7 +6,7 @@
 //
 
 extension FiveHundredState {
-    mutating func bid(_ bid: Bid) throws {
+    public mutating func bid(_ bid: Bid) throws {
         guard acceptingBids else {
             throw BiddingError.biddingClosed
         }
@@ -47,7 +47,7 @@ extension FiveHundredState {
     
     /// Resets kitty and hands and deals the entire 500 deck to all players
     /// and the kitty.
-    mutating func deal() {
+    public mutating func deal() {
         // Reset kitty and hands
         kitty.removeAll()
         for player in hands.keys {
@@ -71,7 +71,8 @@ extension FiveHundredState {
         }
     }
     
-    mutating func setHand(of player: Player, to cards: [PlayingCard]) throws {
+    public mutating func setHand(of player: Player,
+                                 to cards: [PlayingCard]) throws {
         guard hands.keys.contains(player) else {
             throw GameError.playerNotFound
         }

@@ -8,7 +8,7 @@
 import Foundation
 
 extension FiveHundredState {
-    enum BiddingError: Error, LocalizedError {
+    public enum BiddingError: Error, LocalizedError {
         case invalidBid
         case biddingClosed
         
@@ -22,7 +22,7 @@ extension FiveHundredState {
         }
     }
     
-    enum GameError: Error, LocalizedError {
+    public enum GameError: Error, LocalizedError {
         case noBidMade
         case playerNotFound
         
@@ -36,7 +36,7 @@ extension FiveHundredState {
         }
     }
     
-    enum RuleError: Error, LocalizedError {
+    public enum RuleError: Error, LocalizedError {
         case playerDoesNotHoldCard
         case mustFollowSuit
         

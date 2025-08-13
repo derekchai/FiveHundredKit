@@ -11,7 +11,7 @@ open class Player {
     
     /// Initializes a player.
     /// - Parameter name: The player name.
-    init(name: String) {
+    public init(name: String) {
         self.name = name
     }
 }

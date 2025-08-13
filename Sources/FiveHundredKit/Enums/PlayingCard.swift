@@ -13,7 +13,7 @@ public enum PlayingCard: MoveRepresentable, Equatable {
     
     /// Returns a shuffled 500 deck containing red 4s, all cards 5 through to
     /// ace, and one joker.
-    static var shuffled500Deck: [PlayingCard] {
+    public static var shuffled500Deck: [PlayingCard] {
         let fullRanks: [Rank] = [
             .five,
             .six,
@@ -35,7 +35,7 @@ public enum PlayingCard: MoveRepresentable, Equatable {
         return deck.shuffled()
     }
     
-    var noTrumpsRanking: Int {
+    public var noTrumpsRanking: Int {
         switch self {
         case .joker: return 15
         case .standard(let rank, _):
@@ -84,7 +84,8 @@ public enum PlayingCard: MoveRepresentable, Equatable {
     ///   - card: The card to compare against.
     ///   - trumps: The trump suit (or no trumps).
     /// - Returns: `true` if `self` is stronger than `card`; `false` otherwise.
-    func beats(_ other: PlayingCard, leadSuit: Suit, trumps: Trump) -> Bool {
+    public func beats(_ other: PlayingCard,
+                      leadSuit: Suit, trumps: Trump) -> Bool {
         switch trumps {
         case .noTrumps:
             switch self {
