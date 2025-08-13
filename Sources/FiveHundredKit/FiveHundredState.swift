@@ -76,7 +76,7 @@ struct FiveHundredState: GameStateRepresentable {
     
     /// A predicate for comparison between two `(Player, PlayingCard)` tuples
     /// determining which beats the other (taking into account lead and trump suits).
-    private var cardRankPredicate: (
+    private var trickRankPredicate: (
         (player: Player, card: PlayingCard),
         (player: Player, card: PlayingCard)
     ) -> Bool {
@@ -90,7 +90,7 @@ struct FiveHundredState: GameStateRepresentable {
     
     /// A predicate for comparison between two ``PlayingCard``s, determining
     /// which beats the other (taking into account lead and trump suits).
-    private var cardRankPredicate1: (PlayingCard, PlayingCard) -> Bool {
+    private var cardRankPredicate: (PlayingCard, PlayingCard) -> Bool {
         {
             guard let leadSuit else { return false }
             guard let trumps else { return false }
@@ -180,7 +180,7 @@ struct FiveHundredState: GameStateRepresentable {
         trick.append((playerToPlay, card))
         
         if trick.count == players.count {
-            guard let winner = trick.max(by: cardRankPredicate)?.player else {
+            guard let winner = trick.max(by: trickRankPredicate)?.player else {
                 fatalError("Winner of trick could not be determined")
             }
             
@@ -209,6 +209,6 @@ struct FiveHundredState: GameStateRepresentable {
     func sortedHand(of player: Player) -> [PlayingCard]? {
         guard let hand = hands[player] else { return nil }
         
-        return hand.sorted(by: cardRankPredicate1)
+        return hand.sorted(by: cardRankPredicate)
     }
 }
