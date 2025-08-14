@@ -218,6 +218,12 @@ public struct FiveHundredState: GameStateRepresentable {
     /// the bid winner does not contain _any_ one of the cards in `cards`.
     /// - Parameter cards: The cards to discard.
     public mutating func discardFromBidWinner(cards: [PlayingCard]) throws {
+        guard cards.count == 3 else {
+            throw FiveHundredState.RuleError
+                .exactlyThreeCardsMustBeDiscarded
+        }
+        
+        // Check for duplicates
         guard Set(cards).count == cards.count else {
             throw FiveHundredState.RuleError
                 .sameCardCannotBeDiscardedMultipleTimes

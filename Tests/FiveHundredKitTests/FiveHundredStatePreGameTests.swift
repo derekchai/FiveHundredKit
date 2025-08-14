@@ -214,7 +214,9 @@ class FiveHundredStatePreGameTests {
         try state.bid(.pass)
         try state.bid(.pass)                    // N wins bid with 6 spades.
         
-        #expect(state.hands[north] == kitty)
+        for card in kitty {
+            #expect(state.hands[north]!.contains(card))
+        }
     }
     
     @Test("Discard after kitty added to bid-winner's hand")
@@ -253,6 +255,30 @@ class FiveHundredStatePreGameTests {
             try state.discardFromBidWinner(cards: [.standard(.jack, .hearts),
                                                    .standard(.jack, .hearts),
                                                    .standard(.jack, .diamonds)])
+        }
+    }
+    
+    @Test("Discard function throws if not exactly 3 cards discarded")
+    func testDiscardFunctionThrowsIfNot3CardsDiscarded() async throws {
+        try state.setHand(of: north, to: [.standard(.ace, .hearts)])
+        
+        try await testKittyAddedToBidWinnerHand()
+        
+        // N wins bid (6 spades) and gets kitty (Joker, Jh, Jd)
+        // North's hand: Joker, Jh, Ah, Jd
+        
+        // Discard 2 cards only
+        #expect(throws: FiveHundredState.RuleError.self) {
+            try state.discardFromBidWinner(cards: [.standard(.jack, .hearts),
+                                                   .standard(.jack, .diamonds)])
+        }
+        
+        // Discard 4 cards only
+        #expect(throws: FiveHundredState.RuleError.self) {
+            try state.discardFromBidWinner(cards: [.standard(.jack, .hearts),
+                                                   .standard(.ace, .hearts),
+                                                   .standard(.jack, .diamonds),
+                                                   .joker])
         }
     }
 }

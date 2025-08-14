@@ -40,6 +40,7 @@ extension FiveHundredState {
         case playerDoesNotHoldCard
         case mustFollowSuit
         case sameCardCannotBeDiscardedMultipleTimes
+        case exactlyThreeCardsMustBeDiscarded
         
         public var errorDescription: String? {
             switch self {
@@ -49,6 +50,8 @@ extension FiveHundredState {
                 "Played card must follow suit"
             case .sameCardCannotBeDiscardedMultipleTimes:
                 "The same card cannot be discarded multiple times"
+            case .exactlyThreeCardsMustBeDiscarded:
+                "Exactly 3 cards must be discarded"
             }
         }
     }
