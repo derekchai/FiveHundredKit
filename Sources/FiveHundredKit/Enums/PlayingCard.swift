@@ -97,7 +97,9 @@ public enum PlayingCard: MoveRepresentable, Equatable {
         let rank: Rank
         let suit: Suit
         
-        switch string[..<string.endIndex] {
+        let i = string.index(before: string.endIndex)
+        
+        switch string[..<i] {
         case "4": rank = .four
         case "5": rank = .five
         case "6": rank = .six

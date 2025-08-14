@@ -8,7 +8,7 @@
 import Testing
 @testable import FiveHundredKit
 
-@Suite("Bidding Tests")
+@Suite("Bid Struct Tests")
 struct BidTests {
 
     @Test("Bid points are calculated correctly")

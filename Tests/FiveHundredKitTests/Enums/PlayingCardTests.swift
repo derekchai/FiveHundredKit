@@ -125,4 +125,18 @@ struct PlayingCardTests {
         
         #expect(!_Ah.beats(_4h, leadSuit: .diamonds, trumps: .trump(.spades)))
     }
+    
+    @Test("Initialization by parsing string")
+    func testInitializationByParsingString() async throws {
+        #expect(PlayingCard(parsedFrom: "as")
+                == PlayingCard.standard(.ace, .spades))
+        #expect(PlayingCard(parsedFrom: "Tc")
+                == PlayingCard.standard(.ten, .clubs))
+        #expect(PlayingCard(parsedFrom: "9H")
+                == PlayingCard.standard(.nine, .hearts))
+        #expect(PlayingCard(parsedFrom: "Joker")
+                == PlayingCard.joker)
+        #expect(PlayingCard(parsedFrom: "J")
+                == PlayingCard.joker)
+    }
 }
