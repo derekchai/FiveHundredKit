@@ -214,11 +214,17 @@ public struct FiveHundredState: GameStateRepresentable {
         }
     }
     
-    /// Discards `cards` from the hand of the winner of the bid.
+    /// Discards `cards` from the hand of the winner of the bid. Throws if
+    /// the bid winner does not contain _any_ one of the cards in `cards`.
     /// - Parameter cards: The cards to discard.
-    public mutating func discardFromBidWinner(cards: [PlayingCard]) {
-        guard let winner = bid?.player else {
+    public mutating func discardFromBidWinner(cards: [PlayingCard]) throws {
+        guard let winner = bid?.player,
+        let hand = hands[winner] else {
             fatalError("Bid must not be nil")
+        }
+        
+        for card in cards where !hand.contains(card) {
+            throw FiveHundredState.RuleError.playerDoesNotHoldCard
         }
         
         hands[winner]?.removeAll { cards.contains($0) }

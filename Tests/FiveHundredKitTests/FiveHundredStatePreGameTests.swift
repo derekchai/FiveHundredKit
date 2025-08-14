@@ -223,11 +223,24 @@ class FiveHundredStatePreGameTests {
         
         // N wins bid (6 spades) and gets kitty (Joker, Jh, Jd)
         
-        state.discardFromBidWinner(cards: [.joker,
+        try state.discardFromBidWinner(cards: [.joker,
                                            .standard(.jack, .hearts),
                                            .standard(.jack, .diamonds)])
         
         #expect(state.hands[north] == [])
+    }
+    
+    @Test("Discard function throws if player does not hold card")
+    func testDiscardThrowsIfPlayerDoesNotHoldCard() async throws {
+        try await testKittyAddedToBidWinnerHand()
+        
+        // N wins bid (6 spades) and gets kitty (Joker, Jh, Jd)
+        
+        #expect(throws: FiveHundredState.RuleError.self) {
+            try state.discardFromBidWinner(cards: [.standard(.ten, .spades),
+                                                   .standard(.jack, .hearts),
+                                                   .standard(.jack, .diamonds)])
+        }
     }
 }
 
