@@ -87,7 +87,7 @@ public enum PlayingCard: MoveRepresentable, Equatable {
     /// - Parameter input: The input string.
     public init?(parsedFrom input: String) {
         let string = input.lowercased()
-            .trimmingCharacters(in: .whitespacesAndNewlines)
+            .filter { !$0.isWhitespace }
         
         if string == "j" || string == "joker" {
             self = .joker

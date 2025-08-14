@@ -134,6 +134,8 @@ struct PlayingCardTests {
                 == PlayingCard.standard(.ten, .clubs))
         #expect(PlayingCard(parsedFrom: "9H")
                 == PlayingCard.standard(.nine, .hearts))
+        #expect(PlayingCard(parsedFrom: "8     d")
+                == PlayingCard.standard(.eight, .diamonds))
         #expect(PlayingCard(parsedFrom: "Joker")
                 == PlayingCard.joker)
         #expect(PlayingCard(parsedFrom: "J")
