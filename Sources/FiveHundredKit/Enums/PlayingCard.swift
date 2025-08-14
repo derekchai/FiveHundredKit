@@ -76,6 +76,55 @@ public enum PlayingCard: MoveRepresentable, Equatable {
         }
     }
     
+    /// Initializes a new ``PlayingCard`` by parsing a string. If the parser
+    /// is unable to parse the string, returns `nil`.
+    ///
+    /// `input` can be:
+    /// - Joker: `j`, `joker`
+    /// - Standard card: `rs` where:
+    ///     - `r` is one of {4, 5, 6, 7, 8, 9, 10, t, j, q, k, 1, a}
+    ///     - `s` is one of {s, c, d, h}
+    /// - Parameter input: The input string.
+    public init?(parsedFrom input: String) {
+        let string = input.lowercased()
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+        
+        if string == "j" || string == "joker" {
+            self = .joker
+            return
+        }
+        
+        let rank: Rank
+        let suit: Suit
+        
+        switch string[..<string.endIndex] {
+        case "4": rank = .four
+        case "5": rank = .five
+        case "6": rank = .six
+        case "7": rank = .seven
+        case "8": rank = .eight
+        case "9": rank = .nine
+        case "10", "t": rank = .ten
+        case "j": rank = .jack
+        case "q": rank = .queen
+        case "k": rank = .king
+        case "1", "a": rank = .ace
+            
+        default: return nil
+        }
+        
+        switch string.last {
+        case "s": suit = .spades
+        case "c": suit = .clubs
+        case "d": suit = .diamonds
+        case "h": suit = .hearts
+            
+        default: return nil
+        }
+        
+        self = .standard(rank, suit)
+    }
+    
     /// Determines whether `self` beats `card` in terms of ranking, taking
     /// into account trump suits (and the changed order; i.e. bowers). Assumes
     /// that both cards are of the same suit (taking into account bowers/jokers
