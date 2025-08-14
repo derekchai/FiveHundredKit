@@ -7,7 +7,7 @@
 
 import Foundation
 
-public enum PlayingCard: MoveRepresentable, Equatable {
+public enum PlayingCard: MoveRepresentable, Equatable, Hashable {
     case joker
     case standard(Rank, Suit)
     
