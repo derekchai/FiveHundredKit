@@ -31,7 +31,7 @@ public struct FiveHundredState: GameStateRepresentable {
     
     private var discards: [PlayingCard] = []
     
-    private var trick: [(player: Player, card: PlayingCard)] = []
+    public private(set) var trick: [(player: Player, card: PlayingCard)] = []
     
     // MARK: Computed Properties
     /// Returns all legal moves (i.e. cards able to be played) for the player
