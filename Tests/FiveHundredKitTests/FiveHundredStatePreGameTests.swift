@@ -242,6 +242,19 @@ class FiveHundredStatePreGameTests {
                                                    .standard(.jack, .diamonds)])
         }
     }
+    
+    @Test("Discard function throws if duplicate cards discard")
+    func testDiscardFunctionThrowsIfDuplicatedCards() async throws {
+        try await testKittyAddedToBidWinnerHand()
+        
+        // N wins bid (6 spades) and gets kitty (Joker, Jh, Jd)
+        
+        #expect(throws: FiveHundredState.RuleError.self) {
+            try state.discardFromBidWinner(cards: [.standard(.jack, .hearts),
+                                                   .standard(.jack, .hearts),
+                                                   .standard(.jack, .diamonds)])
+        }
+    }
 }
 
 

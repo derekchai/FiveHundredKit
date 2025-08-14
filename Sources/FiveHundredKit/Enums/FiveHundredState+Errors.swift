@@ -39,6 +39,7 @@ extension FiveHundredState {
     public enum RuleError: Error, LocalizedError {
         case playerDoesNotHoldCard
         case mustFollowSuit
+        case sameCardCannotBeDiscardedMultipleTimes
         
         public var errorDescription: String? {
             switch self {
@@ -46,6 +47,8 @@ extension FiveHundredState {
                 "The player does not hold the specified card"
             case .mustFollowSuit:
                 "Played card must follow suit"
+            case .sameCardCannotBeDiscardedMultipleTimes:
+                "The same card cannot be discarded multiple times"
             }
         }
     }
