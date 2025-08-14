@@ -233,6 +233,8 @@ public struct FiveHundredState: GameStateRepresentable {
         }
         
         hands[winner]?.removeAll { cards.contains($0) }
+        
+        hands[winner]?.sort(by: FiveHundredState.handSortingPredicate)
     }
     
     /// Returns `player`'s sorted hand.
