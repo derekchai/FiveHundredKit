@@ -7,7 +7,17 @@
 
 import Foundation
 
-public enum Trump {
+public enum Trump: CustomStringConvertible {
     case noTrumps
     case trump(Suit)
+    
+    /// Returns the Unicode suit character for trumps or "NT" for no trumps.
+    public var description: String {
+        switch self {
+        case .noTrumps:
+            "NT"
+        case .trump(let suit):
+            suit.description
+        }
+    }
 }
