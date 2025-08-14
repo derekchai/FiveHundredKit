@@ -32,8 +32,8 @@ public enum Bid {
     ///
     /// - Parameter input: The string input.
     public init?(parsedFrom input: String) {
-        let string = input.lowercased()
-            .trimmingCharacters(in: .whitespacesAndNewlines)
+        let temp = input.lowercased()
+        let string = temp.filter { !$0.isWhitespace }
         
         guard !string.isEmpty else {
             return nil
@@ -50,14 +50,23 @@ public enum Bid {
             self = .openMisere
             
         default:
-            guard let firstCharacter = string.first,
-                  let count = Int(String(firstCharacter)),
+            let split: String.Index
+            let secondCharacterIndex = string.index(after: string.startIndex)
+            
+            if string[secondCharacterIndex].isWholeNumber {
+                split = string.index(string.startIndex, offsetBy: 2)
+            } else {
+                split = string.index(after: string.startIndex)
+            }
+            
+            let countString = string[..<split]
+            
+            guard let count = Int(String(countString)),
                   count >= 6, count <= 10 else {
                 return nil
             }
             
-            let i = string.index(after: string.startIndex)
-            switch string[i...] {
+            switch string[split...] {
             case "nt", "notrump", "notrumps":
                 self = .noTrumps(count)
                 

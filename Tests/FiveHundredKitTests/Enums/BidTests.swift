@@ -44,5 +44,15 @@ struct BidTests {
         
         #expect(Bid.noTrumps(10) > Bid.openMisere)
     }
+    
+    @Test("Initialization by parsing string")
+    func testInitializationByParsingString() async throws {
+        #expect(Bid(parsedFrom: "6s") == Bid.standard(6, .spades))
+        #expect(Bid(parsedFrom: "7H") == Bid.standard(7, .hearts))
+        #expect(Bid(parsedFrom: "8   c") == Bid.standard(8, .clubs))
+        #expect(Bid(parsedFrom: "10d") == Bid.standard(10, .diamonds))
+        #expect(Bid(parsedFrom: "m") == Bid.misere)
+        #expect(Bid(parsedFrom: "om") == Bid.openMisere)
+    }
 
 }
