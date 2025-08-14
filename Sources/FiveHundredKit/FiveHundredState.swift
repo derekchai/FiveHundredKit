@@ -199,6 +199,7 @@ public struct FiveHundredState: GameStateRepresentable {
         try validatePlay(of: card)
         
         trick.append((playerToPlay, card))
+        hands[playerToPlay]!.removeAll { $0 == card }
         
         if trick.count == players.count {
             guard let winner = trick.max(by: trickRankPredicate)?.player else {

@@ -251,6 +251,27 @@ class FiveHundredStatePlayTests {
         #expect(state.playerToPlay === west)
     }
     
+    @Test("Played cards removed")
+    func testPlayedCardsRemoved() async throws {
+        try state.setHand(of: north, to: [.joker])
+        
+        try state.bid(.noTrumps(6))
+        try state.bid(.pass)
+        try state.bid(.pass)
+        try state.bid(.pass)
+        
+        try state.bid(.pass)
+        try state.bid(.pass)
+        try state.bid(.pass)
+        try state.bid(.pass) // North wins bid with 6NT
+        
+        #expect(state.hands[north]?.count == 1)
+        
+        try state.play(.joker)
+        
+        #expect(state.hands[north]?.count == 0)
+    }
+    
     @Test("Gameplay 1")
     func testGameplay1() async throws {
         try state.setHand(of: north, to: northHand)
