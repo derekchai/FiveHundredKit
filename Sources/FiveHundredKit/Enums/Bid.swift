@@ -31,12 +31,12 @@ public enum Bid {
     /// - Hearts: _x_`h`, _x_`heart`, _x_`hearts`
     ///
     /// - Parameter input: The string input.
-    public init(parsedFrom input: String) throws {
+    public init?(parsedFrom input: String) {
         let string = input.lowercased()
             .trimmingCharacters(in: .whitespacesAndNewlines)
         
         guard !string.isEmpty else {
-            throw ParsingError.parsingError
+            return nil
         }
         
         switch string {
@@ -53,7 +53,7 @@ public enum Bid {
             guard let firstCharacter = string.first,
                   let count = Int(String(firstCharacter)),
                   count >= 6, count <= 10 else {
-                throw ParsingError.parsingError
+                return nil
             }
             
             let i = string.index(after: string.startIndex)
@@ -70,18 +70,7 @@ public enum Bid {
             case "h", "heart", "hearts":
                 self = .standard(count, .hearts)
             default:
-                throw ParsingError.parsingError
-            }
-        }
-    }
-    
-    enum ParsingError: Error, LocalizedError {
-        case parsingError
-        
-        var errorDescription: String? {
-            switch self {
-            case .parsingError:
-                "The bid could not be parsed"
+                return nil
             }
         }
     }
