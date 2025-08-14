@@ -53,6 +53,8 @@ struct BidTests {
         #expect(Bid(parsedFrom: "10d") == Bid.standard(10, .diamonds))
         #expect(Bid(parsedFrom: "m") == Bid.misere)
         #expect(Bid(parsedFrom: "om") == Bid.openMisere)
+        
+        #expect(Bid(parsedFrom: "n") == nil)
     }
 
 }

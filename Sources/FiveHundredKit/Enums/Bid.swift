@@ -50,6 +50,10 @@ public enum Bid {
             self = .openMisere
             
         default:
+            if string.count <= 1 {
+                return nil
+            }
+            
             let split: String.Index
             let secondCharacterIndex = string.index(after: string.startIndex)
             
